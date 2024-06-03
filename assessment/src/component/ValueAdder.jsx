@@ -1,4 +1,3 @@
-import { isNumber } from 'lodash'
 import React, { useState } from 'react'
 import { useEffect } from 'react'
 
@@ -7,7 +6,6 @@ const ValueAdder = () => {
   const [numVals, setNumVals] = useState([])
   const [result, setResult] = useState(0)
   const [delimiter, setDilimiter] = useState(',')
-  const newLineChar = '\n'
 
   useEffect(() => {
     performOperation()
@@ -16,19 +14,22 @@ const ValueAdder = () => {
 
   // const checkNumber = (char) =>  ('0'.charCodeAt() <= char.charCodeAt() && '9'.charCodeAt() >= char.charCodeAt())
 
-  const isNumber = (value) => !isNaN(value)
+  const isNumber = (value) => {
+    const regex = /^(?!.*-)(?!(?:1000|\d{4,}))(?:\d{1,3})(?:\n|$)/;
+    return regex.test(value);
+  }
 
   const valueParser = () => {
     if(inputText.length === 0) {
       setResult(0)
       return
     }
-    let num='', numbers=[]
+    let numbers=[]
     console.log('splitted array: ', inputText.split(delimiter));
     inputText.split(delimiter).map((chars, index) => {
       if(chars.includes('\n')) {
         console.log('isNumber(chars): ', chars);
-        chars.split(newLineChar).map((item) => {
+        chars.split('\n').map((item) => {
           if(isNumber(item)) {
             numbers = [...numbers, parseInt(chars)]
           }
